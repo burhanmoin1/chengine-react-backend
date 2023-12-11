@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Delete Customer</h2>
+  <p>Are you sure you want to delete customer: {{ customer.name }}?</p>
+  <form id="customer-delete-form">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+  <div id="message"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $('#customer-delete-form').submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '{% url "ajax_customer_delete" customer.id %}',
+        success: function (data) {
+          $('#message').text(data.message);
+        }
+      });
+    });
+  </script>
+  <a href="{% url 'ajax_customer_list' %}" class="btn btn-secondary">Back to Customer List</a>
+{% endblock %}

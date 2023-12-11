@@ -1,0 +1,41 @@
+<!-- upload.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload</title>
+    <!-- Your other head elements -->
+</head>
+<body>
+    <h1>File Upload</h1>
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_file_to_s3' %}">
+        {% csrf_token %}
+        <input type="file" name="audio_file" id="audioFileInput">
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('{% url "upload_file_to_s3" %}', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                } else {
+                    alert(data.error_message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the file.');
+            }
+        });
+    </script>
+</body>
+</html>

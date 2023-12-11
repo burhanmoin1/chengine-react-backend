@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Update Customer</h2>
+  <form id="customer-form">
+    {% csrf_token %}
+    <input type="text" name="name" value="{{ customer.name }}" required>
+    <input type="email" name="email" value="{{ customer.email }}" required>
+    <input type="text" name="address" value="{{ customer.address }}">
+    <input type="text" name="phone_number" value="{{ customer.phone_number }}">
+    <button type="submit" class="btn btn-success">Update Customer</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $('#customer-form').submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '{% url "ajax_customer_update" customer.id %}',
+        data: $(this).serialize(),
+        success: function (data) {
+          $('#message').text(data.message);
+        }
+      });
+    });
+  </script>
+  <a href="{% url 'ajax_customer_list' %}" class="btn btn-secondary">Back to Customer List</a>
+{% endblock %}

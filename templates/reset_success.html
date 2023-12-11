@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+    <title>{% block title %}Password Reset Success{% endblock %}</title>
+  </head>
+  <body>
+    <h2>Password Reset Success</h2>
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="password">New Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <label for="confirm_password">Confirm New Password:</label><br>
+        <input type="password" id="confirm_password" name="confirm_password"><br><br>
+        <input type="submit" class="btn" value="Reset Password">
+    </form>
+  </body>
+</html>
+

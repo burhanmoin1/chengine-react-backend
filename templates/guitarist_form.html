@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>{% if guitarist.pk %}Edit Guitarist{% else %}Add Guitar{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% if guitarist.pk %}Update{% else %}Create{% endif %}</button>
+  </form>
+  <br>
+  <a href="{% url 'guitarist_list' %}" class="btn btn-secondary">Back to Guitarist List</a>
+{% endblock %}

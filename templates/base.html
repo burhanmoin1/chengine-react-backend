@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+    <title>{% block title %}Your Website{% endblock %}</title>
+   
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="brand" href="#">Chord Engine</a>
+        <div class="tabs">
+          <a href="{% url 'guitarist_list' %}">Guitar Stand</a><br>
+          <a href="#">Buddies</a>
+          <a href="{% url 'upload_view' %}">Upload Audio</a><br>
+          <a href="{% url 'view_bucket_contents' %}">View Bucket</a><br>
+          <a href="{% url 'list_audio' %}">Play audio</a><br>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a class="nav-item nav-link" href="{% url 'signout' %}">Sign out</a>
+      </div>
+    </nav>
+    {% block content %}{% endblock %}
+  </body>
+</html>

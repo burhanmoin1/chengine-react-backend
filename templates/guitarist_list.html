@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Guitar Stand</h1>
+    <a href="{% url 'add_guitarist' %}"><button>Add Guitar</button></a>
+    
+    <div class="row">
+        {% for guitar in guitarist %}
+        <div class="col-2">
+    <div class="card">
+        <header>
+          <h4>{{ guitar.guitar_brand }}</h4>
+          <h4>{{ guitar.guitar_model }}</h4>
+        </header>
+        <p>{{ guitar.guitar_color }} color</p>
+        <p>{{ guitar.number_of_strings }} strings</p>
+        <footer class="is-right">
+            <a href="{% url 'edit_guitarist' guitar.id %}"><button>Edit</button></a>
+            <a href="{% url 'delete_guitarist' guitar.id %}"><button>Delete</button></a>
+        </footer>
+      </div>
+    </div>
+    {% endfor %}
+      </div>
+      
+{% endblock %}
+

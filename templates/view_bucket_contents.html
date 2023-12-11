@@ -1,0 +1,22 @@
+<!-- view_bucket_contents.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>S3 Bucket Contents</title>
+</head>
+<body>
+    <h1>Bucket Contents:</h1>
+    <form method="post" action="{% url 'delete_bucket_contents' %}">
+        {% csrf_token %}
+        <ul>
+            {% for content in bucket_contents %}
+                <li>
+                    <input type="checkbox" name="selected_items" value="{{ content.key }}">
+                    {{ content.key }}
+                </li>
+            {% endfor %}
+        </ul>
+        <input type="submit" value="Delete Selected Items">
+    </form>
+</body>
+</html>

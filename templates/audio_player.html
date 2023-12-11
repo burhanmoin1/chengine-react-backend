@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Player</title>
+    <style>
+        /* Style for custom controls */
+        .custom-controls {
+            display: flex;
+            align-items: center;
+        }
+        .play-button,
+        .stop-button {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .seeker-bar {
+            width: 80%;
+            margin: 0 10px;
+            height: 8px;
+            background-color: #ccc;
+            position: relative;
+            border-radius: 4px;
+        }
+        .seeker-fill {
+            height: 100%;
+            background-color: #4caf50;
+            border-radius: 4px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Player</h1>
+    <div class="custom-controls">
+        <span class="play-button">&#9658;</span>
+        <span class="stop-button">&#9632;</span>
+        <div class="seeker-bar">
+            <div class="seeker-fill"></div>
+        </div>
+    </div>
+    <audio id="audioPlayer" src="{% url 'play_audio' audio_file %}" type="audio/mpeg"></audio>
+
+    <script>
+        const audio = document.getElementById('audioPlayer');
+        const playButton = document.querySelector('.play-button');
+        const stopButton = document.querySelector('.stop-button');
+        const seekerFill = document.querySelector('.seeker-fill');
+        const seekerBar = document.querySelector('.seeker-bar');
+
+        playButton.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const fillWidth = (audio.currentTime / audio.duration) * 100;
+            seekerFill.style.width = `${fillWidth}%`;
+        });
+
+        seekerBar.addEventListener('click', (e) => {
+            const clickPosition = e.offsetX;
+            const barWidth = seekerBar.clientWidth;
+            const newPosition = (clickPosition / barWidth) * audio.duration;
+            audio.currentTime = newPosition;
+        });
+    </script>
+</body>
+</html>

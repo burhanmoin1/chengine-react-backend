@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+    <title>{% block title %}Your Website{% endblock %}</title>
+  </head>
+  <body>
+    {% block content %}
+    <h2>Add User</h2>
+    {% if error_message %}
+      <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <label for="email">Email:</label>
+      <input type="email" name="email" required><br>
+      <label for="password">Password:</label>
+      <input type="password" name="password" required><br>
+      <input type="submit" value="Add User">
+    </form>
+    <p>Already signed up? <a href="{% url 'login' %}">Login</a></p>
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Customer Detail</h2>
+  <p><strong>Name:</strong> {{ customer.name }}</p>
+  <p><strong>Email:</strong> {{ customer.email }}</p>
+  <p><strong>Address:</strong> {{ customer.address }}</p>
+  <p><strong>Phone Number:</strong> {{ customer.phone_number }}</p>
+  <a href="{% url 'ajax_customer_list' %}" class="btn btn-secondary">Back to Customer List</a>
+{% endblock %}

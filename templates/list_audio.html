@@ -1,0 +1,15 @@
+<!-- list_audio.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MP3 Files</title>
+</head>
+<body>
+    <h1>MP3 Files in Bucket</h1>
+    <ul>
+        {% for audio_file in audio_files %}
+            <li><a href="{% url 'play_audio' audio_file %}">{{ audio_file }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

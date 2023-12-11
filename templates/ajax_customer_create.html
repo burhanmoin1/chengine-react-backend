@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Ajax Customer Create{% endblock %}
+
+{% block content %}
+    <form id="customer-form" method="POST">
+        {% csrf_token %}
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br><br>
+
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address"><br><br>
+
+        <label for="phone_number">Phone Number:</label><br>
+        <input type="text" id="phone_number" name="phone_number"><br><br>
+
+        <button type="submit">Create Customer</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#customer-form').submit(function(event){
+                event.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    dataType: 'json',
+                    success: function(response){
+                        alert(response.message);
+                    },
+                    error: function(error){
+                        alert('An error occurred while processing the request.');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,4 @@
+{% if 'user_email' in request.session %}
+<p class="nav-item nav-link">Welcome, {{ request.session.user_email }}</p>
+<a class="nav-item nav-link" href="{% url 'signout' %}">Sign out</a>
+{% endif %}
