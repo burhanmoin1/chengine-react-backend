@@ -1,15 +1,125 @@
-<!-- list_audio.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MP3 Files</title>
+    <title>File Upload and Audio Player</title>
+    <style>
+        /* CSS for popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
+    <h1>File Upload</h1>
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_file_to_s3' %}">
+        {% csrf_token %}
+        <input type="file" name="audio_file" id="audioFileInput">
+        <button type="submit">Upload</button>
+    </form>
+
     <h1>MP3 Files in Bucket</h1>
     <ul>
         {% for audio_file in audio_files %}
-            <li><a href="{% url 'play_audio' audio_file %}">{{ audio_file }}</a></li>
+            <li><a href="#" class="play-button" data-url="{% url 'play_audio' audio_file %}">{{ audio_file }}</a></li>
         {% endfor %}
     </ul>
+
+    <!-- Popup for audio player -->
+    <div id="audioPopup" class="popup">
+        <audio id="audioPlayer" controls>
+            Your browser does not support the audio element.
+        </audio>
+        <div>
+            <input type="range" id="seekSlider" min="0" value="0">
+        </div>
+        <button id="stopButton">Stop</button>
+        <button id="loopButton">Loop</button>
+        <button id="closeButton">Close</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const playButtons = document.querySelectorAll('.play-button');
+            const audioPopup = document.getElementById('audioPopup');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const seekSlider = document.getElementById('seekSlider');
+            const stopButton = document.getElementById('stopButton');
+            const loopButton = document.getElementById('loopButton');
+            const closeButton = document.getElementById('closeButton');
+
+            playButtons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const audioURL = this.getAttribute('data-url');
+                    audioPlayer.src = audioURL;
+                    audioPopup.style.display = 'block';
+                    audioPlayer.play();
+                });
+            });
+
+            stopButton.addEventListener('click', function () {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                seekSlider.value = 0;
+            });
+
+            loopButton.addEventListener('click', function () {
+                if (audioPlayer.loop) {
+                    audioPlayer.loop = false;
+                    loopButton.textContent = 'Loop';
+                } else {
+                    audioPlayer.loop = true;
+                    loopButton.textContent = 'Unloop';
+                }
+            });
+
+            closeButton.addEventListener('click', function () {
+                audioPlayer.pause();
+                audioPopup.style.display = 'none';
+                audioPlayer.currentTime = 0;
+                audioPlayer.loop = false;
+                seekSlider.value = 0;
+            });
+
+            seekSlider.addEventListener('input', function () {
+                audioPlayer.currentTime = this.value;
+            });
+
+            audioPlayer.addEventListener('timeupdate', function () {
+                seekSlider.value = audioPlayer.currentTime;
+            });
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+    
+            try {
+                const response = await fetch('{% url "upload_file_to_s3" %}', {
+                    method: 'POST',
+                    body: formData
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    alert(data.message);
+                    window.location.reload(); // Refresh the page upon successful upload
+                } else {
+                    alert(data.error_message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the file.');
+            }
+        });
+    </script>
 </body>
 </html>

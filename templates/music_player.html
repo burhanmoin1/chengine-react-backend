@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Music Player</title>
+  <style>
+    /* Your custom CSS styles for the player */
+    .player {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .controls button {
+      margin: 5px;
+      padding: 8px 12px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="range"] {
+      width: 80%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="player">
+    {% if audio_url %}
+    <audio id="audioPlayer" controls>
+      <source src="{{ audio_url }}" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="controls">
+      <button onclick="playAudio()">Play</button>
+      <button onclick="pauseAudio()">Pause</button>
+      <button onclick="stopAudio()">Stop</button>
+      <input type="range" id="seekBar" value="0" oninput="updateSeekBar()">
+    </div>
+    {% else %}
+    <p>No audio file found.</p>
+    {% endif %}
+  </div>
+  <script>
+    {% if audio_url %}
+    const audio = document.getElementById('audioPlayer');
+    const seekBar = document.getElementById('seekBar');
+
+    function playAudio() {
+      audio.play();
+    }
+
+    function pauseAudio() {
+      audio.pause();
+    }
+
+    function stopAudio() {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+    function updateSeekBar() {
+      const seekValue = seekBar.value;
+      audio.currentTime = (audio.duration * seekValue) / 100;
+    }
+
+    audio.addEventListener('timeupdate', function() {
+      const currentTime = audio.currentTime;
+      const duration = audio.duration;
+      const seekValue = (currentTime / duration) * 100;
+      seekBar.value = seekValue;
+    });
+    {% endif %}
+  </script>
+</body>
+</html>
